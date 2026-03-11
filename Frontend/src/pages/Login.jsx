@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import API from "../Services/api";
 
 export default function Login() {
 
@@ -26,10 +26,7 @@ export default function Login() {
 
     try {
 
-      const res = await axios.post(
-        "http://localhost:3001/api/users/login",
-        formData
-      );
+      const res = await API.post("/users/login", formData);
 
       if (res.data.success) {
 
@@ -42,7 +39,7 @@ export default function Login() {
 
       } else {
 
-        alert("Invalid Email or Password");
+        alert(res.data.message || "Invalid Email or Password");
 
       }
 
@@ -63,9 +60,15 @@ export default function Login() {
 
         <div className="col-md-5">
 
-          <div className="card shadow" style={{ width: "500px", borderRadius: "0px" }}>
+          <div
+            className="card shadow"
+            style={{ width: "500px", borderRadius: "0px" }}
+          >
 
-            <div className="card-body" style={{ backgroundColor:'#BFC9D1' }}>
+            <div
+              className="card-body"
+              style={{ backgroundColor: "#BFC9D1" }}
+            >
 
               <h3 className="text-center mb-4">Login</h3>
 
@@ -93,7 +96,11 @@ export default function Login() {
 
                 <button
                   className="btn w-100"
-                  style={{background:'#ffffff',color:'black',border:'2px solid black'}}
+                  style={{
+                    background: "#ffffff",
+                    color: "black",
+                    border: "2px solid black"
+                  }}
                 >
                   Login
                 </button>
@@ -113,5 +120,6 @@ export default function Login() {
       </div>
 
     </div>
+
   );
 }
