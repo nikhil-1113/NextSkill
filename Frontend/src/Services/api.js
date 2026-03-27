@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://nextskill-backend.onrender.com/api"
+  baseURL: "https://nextskill-backend.onrender.com/api/"
 });
 
 export const getCourses = () => API.get("/courses");
