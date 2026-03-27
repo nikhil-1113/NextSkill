@@ -11,7 +11,7 @@ function MyCourses() {
 
   useEffect(() => {
 
-    const userData = localStorage.getItem("user");
+    const userData = sessionStorage.getItem("user");
 
     if (!userData) {
       navigate("/login");
@@ -62,7 +62,7 @@ function MyCourses() {
 
   return (
 
-    <div className="container mt-4 text-white">
+    <div className="container mt-4 ">
 
       <h2>My Courses</h2>
 
@@ -87,7 +87,7 @@ function MyCourses() {
 
                 <img
                   src={course.image}
-                  className="card-img-top"
+                  className="card-img-top img-fluid"
                   alt={course.language}
                   style={{
                     height: "200px",

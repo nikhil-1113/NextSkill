@@ -31,7 +31,7 @@ export default function Signup() {
 
     const newUser = {
       name: formData.name,
-      email: formData.email,
+      email: formData.email.toLowerCase(),
       password: formData.password
     };
 

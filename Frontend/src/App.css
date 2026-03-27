@@ -1,4 +1,48 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   background-color: #44444E;
   min-height: 100vh;
+  padding: 12px;
+  margin: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+@media (max-width: 576px) {
+  body {
+    padding: 10px 8px 16px;
+  }
+
+  .navbar-nav {
+    gap: 8px !important;
+    align-items: stretch;
+  }
+
+  .navbar-nav .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .card,
+  .container,
+  .container-fluid,
+  .row > [class*="col-"] {
+    width: 100%;
+  }
+
+  .table {
+    font-size: 14px;
+  }
 }

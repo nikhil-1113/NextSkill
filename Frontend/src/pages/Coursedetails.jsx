@@ -14,19 +14,17 @@ export default function CourseDetails() {
 
   useEffect(() => {
 
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const isLoggedIn = sessionStorage.getItem("isLoggedIn");
 
     if (!isLoggedIn) {
       navigate("/login");
       return;
     }
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(sessionStorage.getItem("user"));
 
     API.get(`/courses/${id}`)
-      .then(res => {
-        setCourse(res.data);
-      })
+      .then(res => setCourse(res.data))
       .catch(err => console.error(err));
 
     API.post("/enrollments/check", {
@@ -34,9 +32,7 @@ export default function CourseDetails() {
       courseId: id
     })
       .then(res => {
-        if (res.data.enrolled) {
-          setEnrolled(true);
-        }
+        if (res.data.enrolled) setEnrolled(true);
       })
       .catch(err => console.error(err));
 
@@ -45,7 +41,7 @@ export default function CourseDetails() {
 
   const handleEnroll = async () => {
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(sessionStorage.getItem("user"));
 
     try {
 
@@ -70,19 +66,16 @@ export default function CourseDetails() {
   };
 
 
-  if (!course)
+  if (!course) {
     return (
       <div className="d-flex justify-content-center mt-5">
-        <div className="spinner-border"></div>
+        <div className="spinner-border text-primary"></div>
       </div>
     );
-
+  }
 
   const videos = course.videos || [];
-
-  // FIX: videos are strings
   const currentVideo = videos[currentLesson] || "";
-
 
   const handleNext = () => {
     if (currentLesson + 1 < videos.length) {
@@ -90,13 +83,11 @@ export default function CourseDetails() {
     }
   };
 
-
   const handleBack = () => {
     if (currentLesson - 1 >= 0) {
       setCurrentLesson(currentLesson - 1);
     }
   };
-
 
   const handleComplete = () => {
     if (!progress.includes(currentLesson)) {
@@ -107,99 +98,144 @@ export default function CourseDetails() {
 
   return (
 
-    <div className="container mt-4 text-white">
+    <div className="container mt-4">
 
-      <h2>{course.language}</h2>
+      {/* COURSE HEADER */}
 
-      <button
-        className="btn btn-success mb-4"
-        onClick={handleEnroll}
-        disabled={enrolled}
-      >
-        {enrolled ? "Enrolled" : "Enroll Now"}
-      </button>
+      <div className="card shadow mb-4">
+
+        <div
+          className="card-body text-center"
+          style={{
+            background: "linear-gradient(135deg,#37353E,#4E4A59)",
+            color: "white"
+          }}
+        >
+
+          <h2 className="fw-bold">{course.language}</h2>
+
+          {/* DESCRIPTION ADDED HERE */}
+
+          <p
+            style={{
+              maxWidth: "750px",
+              margin: "12px auto",
+              fontSize: "16px",
+              opacity: "0.9"
+            }}
+          >
+            {course.description ||
+              "This course will help you learn the fundamentals and practical skills required to master this technology through structured lessons and real examples."}
+          </p>
+
+          <button
+            className="btn btn-success mt-2"
+            onClick={handleEnroll}
+            disabled={enrolled}
+          >
+            {enrolled ? "Enrolled" : "Enroll Now"}
+          </button>
+
+        </div>
+
+      </div>
 
 
       <div className="row">
 
         {/* VIDEO PLAYER */}
 
-        <div className="col-md-8">
+        <div className="col-lg-8 mb-4">
 
-          <div className="ratio ratio-16x9 mb-3">
+          <div className="card shadow">
 
-            <iframe
-              src={currentVideo.replace("watch?v=", "embed/")}
-              title="course-video"
-              allowFullScreen
-            ></iframe>
+            <div className="card-body">
 
-          </div>
+              <div className="ratio ratio-16x9 mb-3">
 
+                <iframe
+                  src={currentVideo.replace("watch?v=", "embed/")}
+                  title="course-video"
+                  allowFullScreen
+                ></iframe>
 
-          <div className="d-flex justify-content-between">
-
-            <button
-              className="btn btn-secondary"
-              onClick={handleBack}
-              disabled={currentLesson === 0}
-            >
-              Back
-            </button>
+              </div>
 
 
-            <button
-              className="btn btn-success"
-              onClick={handleComplete}
-              disabled={progress.includes(currentLesson)}
-            >
-              {progress.includes(currentLesson)
-                ? "Completed"
-                : "Mark as Complete"}
-            </button>
+              {/* VIDEO CONTROLS */}
 
+              <div className="d-flex justify-content-between">
 
-            <button
-              className="btn btn-primary"
-              onClick={handleNext}
-              disabled={currentLesson + 1 >= videos.length}
-            >
-              Next
-            </button>
+                <button
+                  className="btn btn-outline-secondary"
+                  onClick={handleBack}
+                  disabled={currentLesson === 0}
+                >
+                  Back
+                </button>
+
+                <button
+                  className="btn btn-success"
+                  onClick={handleComplete}
+                  disabled={progress.includes(currentLesson)}
+                >
+                  {progress.includes(currentLesson)
+                    ? "Completed"
+                    : "Mark Complete"}
+                </button>
+
+                <button
+                  className="btn btn-primary"
+                  onClick={handleNext}
+                  disabled={currentLesson + 1 >= videos.length}
+                >
+                  Next
+                </button>
+
+              </div>
+
+            </div>
 
           </div>
 
         </div>
 
 
-        {/* VIDEO LIST */}
+        {/* LESSON LIST */}
 
-        <div className="col-md-4">
+        <div className="col-lg-4">
 
-          <h5>Course Videos</h5>
+          <div className="card shadow">
 
-          <ul className="list-group">
+            <div className="card-header bg-dark text-white">
+              Course Lessons
+            </div>
 
-            {videos.map((video, index) => (
+            <ul className="list-group list-group-flush">
 
-              <li
-                key={index}
-                className={`list-group-item ${index === currentLesson ? "active" : ""}`}
-                style={{ cursor: "pointer" }}
-                onClick={() => setCurrentLesson(index)}
-              >
+              {videos.map((video, index) => (
 
-                Lesson {index + 1}
+                <li
+                  key={index}
+                  className={`list-group-item d-flex justify-content-between align-items-center 
+                  ${index === currentLesson ? "active" : ""}`}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setCurrentLesson(index)}
+                >
 
-                {progress.includes(index) && (
-                  <span className="badge bg-success ms-2">✔</span>
-                )}
+                  Lesson {index + 1}
 
-              </li>
+                  {progress.includes(index) && (
+                    <span className="badge bg-success">Done</span>
+                  )}
 
-            ))}
+                </li>
 
-          </ul>
+              ))}
+
+            </ul>
+
+          </div>
 
         </div>
 
@@ -208,27 +244,36 @@ export default function CourseDetails() {
 
       {/* DOCUMENTS */}
 
-      <h4 className="mt-5">Course Documents</h4>
+      <div className="card shadow mt-4">
 
-      <div className="d-flex flex-wrap gap-3">
+        <div className="card-header bg-dark text-white">
+          Course Documents
+        </div>
 
-        {course.documents?.map((doc, index) => (
+        <div className="card-body">
 
-          <a
-            key={index}
-            href={doc.link}
-            target="_blank"
-            rel="noreferrer"
-            className="btn btn-primary"
-          >
-            {doc.name}
-          </a>
+          <div className="d-flex flex-wrap gap-3">
 
-        ))}
+            {course.documents?.map((doc, index) => (
+
+              <a
+                key={index}
+                href={doc.link}
+                target="_blank"
+                rel="noreferrer"
+                className="btn btn-outline-primary"
+              >
+                {doc.name}
+              </a>
+
+            ))}
+
+          </div>
+
+        </div>
 
       </div>
 
     </div>
-
   );
 }

@@ -15,7 +15,7 @@ function Home() {
   const fetchCourses = async () => {
     try {
       const res = await getCourses();
-      setCourses(res.data);
+      setCourses(res.data || []);
     } catch (err) {
       console.log(err);
     }
@@ -62,16 +62,15 @@ function Home() {
 
       {/* Cards */}
 
-      <div className="row row-cols-1 row-cols-md-4 g-4">
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
 
         {filteredCourses.map((course) => (
 
-          <div className="col" key={course.id}>
+          <div className="col" key={course._id}>
 
             <div
-              className="card"
+              className="card h-100"
               style={{
-                width: "18rem",
                 borderRadius: "10px",
                 overflow: "hidden",
                 boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
@@ -81,7 +80,7 @@ function Home() {
 
               <img
                 src={course.image}
-                className="card-img-top"
+                className="card-img-top img-fluid"
                 alt={course.language}
                 style={{
                   height: "200px",
@@ -103,7 +102,7 @@ function Home() {
 
                 <button
                   className="btn w-100"
-                  onClick={() => navigate(`/course/${course.id}`)}
+                  onClick={() => navigate(`/course/${course._id}`)}
                   style={{ background: "#ffffff", color: "black", border: "2px solid black" }}
                 >
                   {course.detailsButton || "View Details"}

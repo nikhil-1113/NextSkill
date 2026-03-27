@@ -6,12 +6,12 @@ const User = require("../Models/User");
 // REGISTER
 router.post("/register", async (req, res) => {
 
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   try {
 
     // check if user already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
 
     if (existingUser) {
       return res.json({
@@ -22,15 +22,17 @@ router.post("/register", async (req, res) => {
 
     const newUser = new User({
       name,
-      email,
-      password
+      email: email.toLowerCase(),
+      password,
+      role: role || "user" // default role if not provided
     });
 
     await newUser.save();
 
     res.json({
       success: true,
-      message: "User registered successfully"
+      message: "User registered successfully",
+      user: newUser
     });
 
   } catch (error) {
@@ -49,13 +51,18 @@ router.post("/login", async (req, res) => {
 
   try {
 
-    const user = await User.findOne({ email, password });
+    const user = await User.findOne({ email: email.toLowerCase(), password });
 
     if (user) {
 
       res.json({
         success: true,
-        user: user
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role   // send role to frontend
+        }
       });
 
     } else {
