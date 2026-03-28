@@ -35,11 +35,7 @@ export default function AdminDashboard() {
       return;
     }
 
-    if (user.role !== "admin") {
-      alert("Admins only");
-      window.location.href = "/";
-      return;
-    }
+    
 
     fetchCourses();
 
