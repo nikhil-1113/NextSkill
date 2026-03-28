@@ -54,13 +54,16 @@ export default function Signup() {
 
   return (
 
-    <div className="container mt-5">
+    <div className="container mt-3 mt-md-5">
 
       <div className="row justify-content-center">
 
-        <div className="col-md-5">
+        <div className="col-12 col-sm-10 col-md-5">
 
-          <div className="card shadow" style={{ width: "500px", borderRadius: "0px" }}>
+          <div 
+            className="card shadow w-100" 
+            style={{ borderRadius: "0px", maxWidth: "500px", margin: "auto" }}
+          >
 
             <div className="card-body" style={{ backgroundColor: '#BFC9D1' }}>
 
