@@ -27,7 +27,7 @@ export default function Login() {
     try {
 
       const res = await axios.post(
-        "http://localhost:3001/api/users/login",
+        "https://nextskill-backend.onrender.com/api/users/login",
         {
           ...formData,
           email: formData.email.toLowerCase()
